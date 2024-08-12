@@ -1,6 +1,4 @@
 from Scraper import wikiScraper
-import requests
-from typing import Union
 from fastapi import FastAPI, exceptions
 from fastapi.middleware.cors import CORSMiddleware
 

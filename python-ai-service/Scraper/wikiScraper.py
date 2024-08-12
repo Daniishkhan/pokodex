@@ -1,18 +1,23 @@
 import requests
 import time
-from selenium.webdriver.chrome.service import Service
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from chromedriver_py import binary_path
 from bs4 import BeautifulSoup
-
 
 class PokemonScraper:
     def __init__(self):
         pass
 
     def scrape_wikipedia_selenium(self, url):
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+
         svc = Service(executable_path=binary_path)
-        driver = webdriver.Chrome(service=svc)
+        driver = webdriver.Chrome(service=svc, options=chrome_options)
 
         driver.get(url)
 
@@ -24,6 +29,7 @@ class PokemonScraper:
 
         driver.quit()
 
+        # Rest of the method remains the same
         tables = soup.find_all("table", class_="wikitable sortable plainrowheaders jquery-tablesorter")
         print(f"Number of tables found: {len(tables)}")
 
@@ -56,7 +62,7 @@ class PokemonScraper:
                     }
                     all_pokemon.append(pokemon)
 
-                for pokemon in all_pokemon:
-                    print(pokemon)
+                return all_pokemon
         else:
             print("No tables found with the specified class.")
+            return []
