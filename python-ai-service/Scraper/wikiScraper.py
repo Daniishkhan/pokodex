@@ -3,7 +3,6 @@ import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from chromedriver_py import binary_path
 from bs4 import BeautifulSoup
 
 class PokemonScraper:
@@ -15,9 +14,10 @@ class PokemonScraper:
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.binary_location = "/usr/bin/google-chrome"  # Specify the Chrome binary location
 
-        svc = Service(executable_path=binary_path)
-        driver = webdriver.Chrome(service=svc, options=chrome_options)
+        service = Service()  # Remove the executable_path argument
+        driver = webdriver.Chrome(service=service, options=chrome_options)
 
         driver.get(url)
 
