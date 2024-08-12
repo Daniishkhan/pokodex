@@ -1,0 +1,7 @@
+services:
+  python-ai-service:
+    build:
+      context: ./python-ai-service
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
