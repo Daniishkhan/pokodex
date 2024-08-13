@@ -1,7 +1,45 @@
 services:
+  laravel-backend:
+    build:
+      context: ./laravel-backend-service
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=pokedex_ai
+      - DB_USERNAME=pokodex_user
+      - DB_PASSWORD=pokodex_user
+      - DB_SCHEMA=pokedex_schema
+    depends_on:
+      - db
+
   python-ai-service:
     build:
       context: ./python-ai-service
       dockerfile: Dockerfile
     ports:
       - "8001:8001"
+
+  svelte-frontend:
+    build:
+      context: ./svelte-frontend-service
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=pokedex_ai
+      - POSTGRES_USER=pokodex_user
+      - POSTGRES_PASSWORD=pokodex_user
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
