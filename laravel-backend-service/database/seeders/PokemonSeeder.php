@@ -12,7 +12,8 @@ class PokemonSeeder extends Seeder
     public function run()
     {
         try {
-            $response = Http::get("http://127.0.0.1:8001/pokemond-data");
+            $pythonServiceUrl = env('PYTHON_SERVICE_URL', 'http://python-ai-service:8001');
+            $response = Http::get("{$pythonServiceUrl}/pokemon-data");
             $response->throw();  
             $pokemonData = $response->json()['data'];
 

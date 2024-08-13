@@ -13,8 +13,10 @@ services:
       - DB_USERNAME=pokodex_user
       - DB_PASSWORD=pokodex_user
       - DB_SCHEMA=pokedex_schema
+      - PYTHON_SERVICE_URL=http://python-ai-service:8001
     depends_on:
       - db
+      - python-ai-service
 
   python-ai-service:
     build:

@@ -21,7 +21,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/pokemond-data")
+@app.get("/pokemon-data")
 def getData():
     try:
         url = "https://en.wikipedia.org/wiki/List_of_generation_I_Pok%C3%A9mon"
