@@ -21,12 +21,10 @@ class PokemonController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'pokedex_number' => 'required|integer|unique:pokemon',
-            'types' => 'required|array',
-            'abilities' => 'required|array',
-            'stats' => 'required|array',
-            'description' => 'required|string',
-            'image_url' => 'required|url',
+            'evolves_from' => 'required|string',
+            'evolves_to' => 'required|string',
+            'type' => 'required|string',
+            'notes' => 'required|string',
         ]);
 
         return Pokemon::create($validated);

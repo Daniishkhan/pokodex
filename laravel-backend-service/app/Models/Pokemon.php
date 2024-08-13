@@ -10,17 +10,9 @@ class Pokemon extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'pokedex_number',
-        'types',
-        'abilities',
-        'stats',
-        'description',
-        'image_url',
-    ];
-    
-    protected $casts = [
-        'types' => 'array',
-        'abilities' => 'array',
-        'stats' => 'array',
+        'type',
+        'evolves_from',
+        'evolves_to',
+        'notes',
     ];
 }
