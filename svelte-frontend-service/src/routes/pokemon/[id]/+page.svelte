@@ -1,14 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { goto } from '$app/navigation';
   import type { Pokemon } from '$lib/types';
 
-  type Error = string | null;
-
   let pokemon: Pokemon | null = null;
-  let loading = true;
-  let error: Error = null;
 
   onMount(async () => {
     const id = $page.params.id;
@@ -18,88 +13,108 @@
       if (result.status === 'success') {
         pokemon = result.data;
       } else {
-        error = 'Failed to fetch Pokemon data';
+        console.error('Failed to fetch Pokemon data');
       }
-    } catch (err) {
-      error = 'Error fetching Pokemon data';
-    } finally {
-      loading = false;
+    } catch (error) {
+      console.error('Error fetching Pokemon data:', error);
     }
   });
-
-  async function handleDelete() {
-    if (!pokemon) return;
-    if (confirm(`Are you sure you want to delete ${pokemon.name}?`)) {
-      try {
-        const response = await fetch(`http://localhost:8000/api/pokemon/${pokemon.id}`, {
-          method: 'DELETE'
-        });
-        if (response.ok) {
-          goto('/');
-        } else {
-          error = 'Failed to delete Pokemon';
-        }
-      } catch (err) {
-        error = 'Error deleting Pokemon';
-      }
-    }
-  }
-
-  function handleUpdate() {
-    if (pokemon) {
-      goto(`/pokemon/${pokemon.id}/edit`);
-    }
-  }
 </script>
 
-<svelte:head>
-  <title>{pokemon ? pokemon.name : 'Pokemon Details'} | Pokodex</title>
-</svelte:head>
-
-<div class="container">
-  <main>
-    {#if loading}
-      <p class="loading">Loading...</p>
-    {:else if error}
-      <p class="error">Error: {error}</p>
-    {:else if pokemon}
-      <div class="pokemon-details">
-        <h1>{pokemon.name}</h1>
-        <div class="info-grid">
-          <div class="info-item">
-            <span class="label">Type:</span>
-            <span class="value">{pokemon.type}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">Evolves from:</span>
-            <span class="value">{pokemon.evolves_from || 'None'}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">Evolves to:</span>
-            <span class="value">{pokemon.evolves_to || 'None'}</span>
-          </div>
-        </div>
-        <div class="notes">
-          <h2>Notes</h2>
-          <p>{pokemon.notes}</p>
-        </div>
+<main>
+  {#if pokemon}
+    <h1>{pokemon.name}</h1>
+    <div class="pokemon-details">
+      <div class="pokemon-image">
+        <div class="image-placeholder">{pokemon.name[0]}</div>
       </div>
-    {:else}
-      <p class="no-data">No Pokemon data available</p>
-    {/if}
-    
-    <div class="action-buttons">
-      <a href="/" class="btn btn-secondary">Back to list</a>
-      <div class="action-group">
-        {#if pokemon}
-          <button on:click={handleUpdate} class="btn btn-primary">Update</button>
-          <button on:click={handleDelete} class="btn btn-danger">Delete</button>
+      <div class="pokemon-info">
+        <p><strong>Type:</strong> {pokemon.type}</p>
+        {#if pokemon.evolves_from}
+          <p><strong>Evolves from:</strong> {pokemon.evolves_from}</p>
+        {/if}
+        {#if pokemon.evolves_to}
+          <p><strong>Evolves to:</strong> {pokemon.evolves_to}</p>
+        {/if}
+        {#if pokemon.notes}
+          <p><strong>Notes:</strong> {pokemon.notes}</p>
         {/if}
       </div>
     </div>
-  </main>
-</div>
+  {:else}
+    <p>Loading...</p>
+  {/if}
+</main>
 
 <style lang="scss">
-  @import '../../../styles/pokemon-details.scss';
+  $primary-color: #e3350d;
+  $secondary-color: #3d7dca;
+  $background-color: #000000;
+  $card-background: #ffffff;
+  $text-color: #ffffff;
+
+  $font-family: 'Arial', sans-serif;
+  $font-size-base: 16px;
+  $font-size-large: 1.5em;
+  $font-size-xlarge: 2em;
+
+  $spacing-small: 10px;
+  $spacing-medium: 1rem;
+  $spacing-large: 2rem;
+
+  $border-radius: 10px;
+
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: $spacing-large;
+    font-family: $font-family;
+    background-color: $background-color;
+    color: $text-color;
+  }
+
+  h1 {
+    text-align: center;
+    color: $primary-color;
+    font-size: $font-size-xlarge;
+    margin-bottom: $spacing-medium;
+  }
+
+  .pokemon-details {
+    display: flex;
+    align-items: center;
+    background-color: $card-background;
+    border-radius: $border-radius;
+    padding: $spacing-medium;
+    color: $background-color;
+  }
+
+  .pokemon-image {
+    width: 200px;
+    height: 200px;
+    background-color: $background-color;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: $spacing-large;
+
+    .image-placeholder {
+      font-size: $font-size-xlarge;
+      color: $primary-color;
+    }
+  }
+
+  .pokemon-info {
+    flex: 1;
+
+    p {
+      margin: $spacing-small 0;
+      font-size: $font-size-base;
+
+      strong {
+        color: $secondary-color;
+      }
+    }
+  }
 </style>
