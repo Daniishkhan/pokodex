@@ -6,7 +6,7 @@
   let pokemonList: Pokemon[] = [];
   let searchQuery = '';
   let currentPage = 1;
-  const itemsPerPage = 20;
+  const itemsPerPage = 20; 
 
   onMount(async () => {
     try {
@@ -53,7 +53,7 @@
 
 <main>
   <h1>Welcome to Pokedex</h1>
-  <p class="description">This is a Pokedex application built with Svelte, Laravel and Python AI</p>
+  <p class="app-description">This is a Pokedex application built with Svelte, Laravel and Python AI</p>
   
   <img src="/images/pokemon-logo.png" alt="Pokemon Logo" class="pokemon-logo">
   
@@ -86,8 +86,6 @@
   </div>
 </main>
 
-<style>
-  .pokemon-card {
-    cursor: pointer;
-  }
+<style lang="scss">
+  @import '../styles/home.scss';
 </style>
