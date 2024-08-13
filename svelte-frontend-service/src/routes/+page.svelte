@@ -6,7 +6,8 @@
   let pokemonList: Pokemon[] = [];
   let searchQuery = '';
   let currentPage = 1;
-  const itemsPerPage = 20; 
+  const itemsPerPage = 20; // 5 items per row * 4 rows
+  const itemsPerRow = 5;
 
   onMount(async () => {
     try {
@@ -63,11 +64,11 @@
     />
   </div>
 
-  <div class="pokemon-grid">
+  <div class="pokemon-grid" style="--items-per-row: {itemsPerRow};">
     {#each paginatedPokemon as pokemon (pokemon.id)}
       <button class="pokemon-card" on:click={() => goToPokemonDetails(pokemon.id)}>
         <div class="pokemon-image">
-          <div class="image-placeholder">{pokemon.name[0]}</div>
+          <div class="image-placeholder">{pokemon.name[0].toUpperCase()}</div>
         </div>
         <p>{pokemon.name}</p>
       </button>
@@ -84,15 +85,16 @@
 </main>
 
 <style lang="scss">
-  $primary-color: #e3350d;
-  $secondary-color: #3d7dca;
-  $background-color: #000000;
+  $primary-color: #3d7dca;
+  $secondary-color: #ffcb05;
+  $background-color: #f0f0f0;
   $card-background: #ffffff;
-  $text-color: #ffffff;
+  $text-color: #333333;
+  $accent-color: #ff5722;
 
   $font-family: 'Arial', sans-serif;
   $font-size-base: 16px;
-  $font-size-large: 1.5em;
+  $font-size-large: 1.2em;
   $font-size-xlarge: 2em;
 
   $spacing-small: 10px;
@@ -100,6 +102,7 @@
   $spacing-large: 2rem;
 
   $border-radius: 10px;
+  $box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
   $transition-speed: 0.3s;
 
@@ -129,38 +132,46 @@
   }
 
   .app-description {
-    color: $text-color;
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.1em;
     margin-bottom: $spacing-large;
+    color: darken($text-color, 10%);
   }
 
   .pokemon-logo {
-    width: 300px;
-    margin-bottom: $spacing-large;
+    display: block;
+    width: 200px;
+    margin: 0 auto $spacing-large;
   }
 
   .search-container {
     margin-bottom: $spacing-large;
-    width: 100%;
-    max-width: 500px;
     
     input {
       width: 100%;
-      padding: $spacing-small;
+      padding: $spacing-medium;
       font-size: $font-size-base;
       border: 2px solid $primary-color;
       border-radius: $border-radius;
-      background-color: $background-color;
+      background-color: $card-background;
       color: $text-color;
+      box-shadow: $box-shadow;
+      transition: box-shadow $transition-speed ease;
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.3);
+      }
     }
   }
 
   .pokemon-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: $spacing-large;
+    grid-template-columns: repeat(var(--items-per-row), 1fr);
+    gap: $spacing-medium;
     width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
   }
 
   .pokemon-card {
@@ -168,19 +179,25 @@
     border-radius: $border-radius;
     padding: $spacing-medium;
     text-align: center;
-    transition: transform $transition-speed ease;
+    transition: transform $transition-speed ease, box-shadow $transition-speed ease;
     cursor: pointer;
-    border: none;
+    box-shadow: $box-shadow;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 180px; 
 
     &:hover {
-      transform: scale(1.05);
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
 
     .pokemon-image {
-      width: 100px;
-      height: 100px;
-      margin: 0 auto $spacing-small;
-      background-color: $background-color;
+      width: 80px;
+      height: 80px;
+      margin-bottom: $spacing-small;
+      background-color: lighten($primary-color, 30%);
       border-radius: 50%;
       display: flex;
       justify-content: center;
@@ -189,13 +206,17 @@
       .image-placeholder {
         font-size: $font-size-large;
         color: $primary-color;
+        font-weight: bold;
       }
     }
 
     p {
       margin: 0;
       font-weight: bold;
-      color: $background-color;
+      color: $text-color;
+      font-size: 0.9em;
+      word-break: break-word;
+      max-width: 100%;
     }
   }
 
@@ -205,16 +226,27 @@
 
     button {
       margin: 0 5px;
-      padding: 5px 10px;
-      background-color: $background-color;
+      padding: $spacing-small $spacing-medium;
+      background-color: $card-background;
       border: 1px solid $primary-color;
       border-radius: $border-radius;
       cursor: pointer;
-      color: $text-color;
+      color: $primary-color;
+      transition: background-color $transition-speed ease, color $transition-speed ease;
+
+      &:hover {
+        background-color: $primary-color;
+        color: $card-background;
+      }
 
       &.active {
         background-color: $primary-color;
-        color: $background-color;
+        color: $card-background;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
     }
   }

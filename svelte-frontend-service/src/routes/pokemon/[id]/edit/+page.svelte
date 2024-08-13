@@ -56,14 +56,14 @@
     <title>Edit {pokemon?.name ?? 'Pokemon'} | Pokodex</title>
 </svelte:head>
 
-<div class="container">
-    <main>
-        <h1>Edit Pokemon</h1>
-        {#if loading}
-            <p class="loading">Loading...</p>
-        {:else if error}
-            <p class="error">{error}</p>
-        {:else if pokemon}
+<main>
+    <h1>Edit Pokemon</h1>
+    {#if loading}
+        <p class="loading">Loading...</p>
+    {:else if error}
+        <p class="error">{error}</p>
+    {:else if pokemon}
+        <div class="edit-card">
             <form on:submit|preventDefault={handleSubmit} class="edit-form">
                 <div class="form-group">
                     <label for="name">Name:</label>
@@ -90,61 +90,65 @@
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
-        {:else}
-            <p class="no-data">No Pokemon data available</p>
-        {/if}
-        
-        {#if successMessage}
-            <div class="success-message">{successMessage}</div>
-        {/if}
-    </main>
-</div>
+        </div>
+    {:else}
+        <p class="no-data">No Pokemon data available</p>
+    {/if}
+    
+    {#if successMessage}
+        <div class="success-message">{successMessage}</div>
+    {/if}
+</main>
 
 <style lang="scss">
-    $primary-color: #e3350d;
-    $secondary-color: #3d7dca;
+    $primary-color: #3d7dca;
+    $secondary-color: #ffcb05;
     $background-color: #f0f0f0;
-    $text-color: #333;
-    $error-color: #ff0000;
-    $success-color: #00ff00;
+    $card-background: #ffffff;
+    $text-color: #333333;
+    $error-color: #ff3860;
+    $success-color: #23d160;
 
     $font-family: 'Arial', sans-serif;
     $font-size-base: 16px;
-    $font-size-large: 1.5em;
+    $font-size-large: 1.2em;
+    $font-size-xlarge: 2em;
 
     $spacing-small: 10px;
-    $spacing-medium: 20px;
-    $spacing-large: 30px;
+    $spacing-medium: 1rem;
+    $spacing-large: 2rem;
 
-    $border-radius: 5px;
+    $border-radius: 10px;
+    $box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
-    .container {
+    $transition-speed: 0.3s;
+
+    main {
         max-width: 800px;
         margin: 0 auto;
         padding: $spacing-large;
         font-family: $font-family;
-    }
-
-    main {
         background-color: $background-color;
-        padding: $spacing-large;
-        border-radius: $border-radius;
+        color: $text-color;
     }
 
     h1 {
+        text-align: center;
         color: $primary-color;
-        font-size: $font-size-large;
+        font-size: $font-size-xlarge;
         margin-bottom: $spacing-large;
     }
 
-    .loading, .error, .no-data {
-        text-align: center;
-        font-size: $font-size-base;
-        margin: $spacing-medium 0;
-    }
+    .edit-card {
+        background-color: $card-background;
+        border-radius: $border-radius;
+        padding: $spacing-large;
+        box-shadow: $box-shadow;
+        transition: box-shadow $transition-speed ease;
 
-    .error {
-        color: $error-color;
+        &:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
     }
 
     .edit-form {
@@ -155,18 +159,28 @@
                 display: block;
                 margin-bottom: $spacing-small;
                 font-weight: bold;
+                color: $primary-color;
             }
 
             input, textarea {
                 width: 100%;
-                padding: $spacing-small;
+                padding: $spacing-medium;
                 font-size: $font-size-base;
-                border: 1px solid $secondary-color;
+                border: 2px solid $primary-color;
                 border-radius: $border-radius;
+                background-color: $card-background;
+                color: $text-color;
+                transition: box-shadow $transition-speed ease;
+
+                &:focus {
+                    outline: none;
+                    box-shadow: 0 0 0 3px rgba($primary-color, 0.3);
+                }
             }
 
             textarea {
                 height: 100px;
+                resize: vertical;
             }
         }
     }
@@ -177,28 +191,53 @@
         margin-top: $spacing-large;
 
         .btn {
-            padding: $spacing-small $spacing-medium;
+            padding: $spacing-medium $spacing-large;
             font-size: $font-size-base;
             border: none;
             border-radius: $border-radius;
             cursor: pointer;
             text-decoration: none;
-            color: #fff;
+            color: $text-color;
+            transition: background-color $transition-speed ease, transform $transition-speed ease;
+
+            &:hover {
+                transform: translateY(-2px);
+            }
 
             &.btn-primary {
                 background-color: $primary-color;
+                color: $card-background;
+
+                &:hover {
+                    background-color: darken($primary-color, 10%);
+                }
             }
 
             &.btn-secondary {
                 background-color: $secondary-color;
+
+                &:hover {
+                    background-color: darken($secondary-color, 10%);
+                }
             }
         }
     }
 
-    .success-message {
-        color: $success-color;
+    .loading, .error, .no-data, .success-message {
         text-align: center;
         font-size: $font-size-base;
-        margin-top: $spacing-medium;
+        margin: $spacing-medium 0;
+        padding: $spacing-medium;
+        border-radius: $border-radius;
+    }
+
+    .error {
+        color: $card-background;
+        background-color: $error-color;
+    }
+
+    .success-message {
+        color: $card-background;
+        background-color: $success-color;
     }
 </style>
