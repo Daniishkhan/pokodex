@@ -1,8 +1,139 @@
-Certainly! Here's a detailed README for the Pokodex application, including folder structure and routes:
-
 # Pokodex Application
 
 Pokodex is a full-stack application that allows users to search for and view details about Pokémon. It consists of three main components: a Laravel backend, a Svelte frontend, and a Python AI service for data scraping.
+
+## Prerequisites
+
+- Docker and Docker Compose
+- Git
+
+## Quick Start
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/pokodex.git
+   cd pokodex
+   ```
+
+2. Set up environment variables:
+   ```
+   cp laravel-backend-service/.env.example laravel-backend-service/.env
+   ```
+   Edit `laravel-backend-service/.env` and configure your database settings.
+
+3. Build and start the Docker containers:
+   ```
+   docker-compose up --build -d
+   ```
+
+4. Install dependencies:
+   ```
+   docker-compose exec laravel-backend composer install
+   docker-compose exec svelte-frontend npm install
+   docker-compose exec python-ai-service pip install -r requirements.txt
+   ```
+
+5. Run migrations and seed the database:
+   ```
+   docker-compose exec laravel-backend php artisan migrate
+   docker-compose exec laravel-backend php artisan db:seed
+   ```
+
+6. Access the application:
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8000/api
+   - Python service: http://localhost:8001
+
+## Detailed Setup
+
+### Laravel Backend Service
+
+1. Navigate to the Laravel backend directory:
+   ```
+   cd laravel-backend-service
+   ```
+
+2. Install PHP dependencies:
+   ```
+   docker-compose exec laravel-backend composer install
+   ```
+
+3. Generate application key:
+   ```
+   docker-compose exec laravel-backend php artisan key:generate
+   ```
+
+4. Run migrations:
+   ```
+   docker-compose exec laravel-backend php artisan migrate
+   ```
+
+5. Seed the database:
+   ```
+   docker-compose exec laravel-backend php artisan db:seed
+   ```
+
+### Svelte Frontend Service
+
+1. Navigate to the Svelte frontend directory:
+   ```
+   cd svelte-frontend-service
+   ```
+
+2. Install Node.js dependencies:
+   ```
+   docker-compose exec svelte-frontend npm install
+   ```
+
+3. Build the frontend:
+   ```
+   docker-compose exec svelte-frontend npm run build
+   ```
+
+### Python AI Service
+
+1. Navigate to the Python AI service directory:
+   ```
+   cd python-ai-service
+   ```
+
+2. Install Python dependencies:
+   ```
+   docker-compose exec python-ai-service pip install -r requirements.txt
+   ```
+
+## Usage
+
+After setting up all services, you can use the Pokodex application:
+
+1. Open your web browser and go to `http://localhost:3000` to access the Svelte frontend.
+2. Use the search functionality to find Pokémon.
+3. Click on a Pokémon to view its details.
+
+## Development
+
+To work on the project in development mode:
+
+1. For the Laravel backend:
+   ```
+   docker-compose exec laravel-backend php artisan serve
+   ```
+
+2. For the Svelte frontend:
+   ```
+   docker-compose exec svelte-frontend npm run dev
+   ```
+
+3. For the Python AI service:
+   ```
+   docker-compose exec python-ai-service python main.py
+   ```
+
+## Troubleshooting
+
+- If you encounter any issues with database connections, ensure your `.env` file in the Laravel backend is correctly configured.
+- For permission issues, you may need to run Docker commands with `sudo` (on Linux/macOS).
+- If the Python service fails to scrape data, check your internet connection and ensure the Wikipedia page structure hasn't changed.
 
 ## Folder Structure
 
@@ -199,8 +330,10 @@ Each method includes error handling and logging.
 
 4. **Frontend Interaction**: The Svelte frontend interacts with the Laravel backend API to display and manage Pokémon data.
 
-# Run migrations
+# Docker command that you can use to setup the project
+
+## Run migrations
 docker-compose exec laravel-backend php artisan migrate
 
-# Run the seeding command 
+## Run the seeding command 
 docker-compose exec laravel-backend php artisan db:seed
