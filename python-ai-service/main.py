@@ -1,6 +1,7 @@
 from Scraper import wikiScraper
 from fastapi import FastAPI, exceptions
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
 app = FastAPI()
 
@@ -30,3 +31,6 @@ def getData():
         return {"data": data}
     except Exception as e:
         raise exceptions.HTTPException(status_code=500, detail=str(e))
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8001)
