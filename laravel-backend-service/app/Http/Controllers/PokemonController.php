@@ -9,7 +9,19 @@ class PokemonController extends Controller
 {
     public function index()
     {
-        return Pokemon::all();
+        try {
+            $pokemon = Pokemon::all();
+            return response()->json([
+                'count' => $pokemon->count(),
+                'data' => $pokemon,
+                'message' => $pokemon->isEmpty() ? 'No Pokémon found' : 'Pokémon retrieved successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error fetching Pokémon: ' . $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ], 500);
+        }
     }
 
     public function show(Pokemon $pokemon)
@@ -30,5 +42,15 @@ class PokemonController extends Controller
         return Pokemon::create($validated);
     }
 
-    // Add update and destroy methods as needed
+    public function update(Request $request, Pokemon $pokemon)
+    {
+        $pokemon->update($request->all());
+        return $pokemon;
+    }
+
+    public function destroy(Pokemon $pokemon)
+    {
+        $pokemon->delete();
+        return response()->noContent();
+    }
 }
