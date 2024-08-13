@@ -101,5 +101,104 @@
 </div>
 
 <style lang="scss">
-    @import '../../../../styles/pokemon-edit.scss';
+    $primary-color: #e3350d;
+    $secondary-color: #3d7dca;
+    $background-color: #f0f0f0;
+    $text-color: #333;
+    $error-color: #ff0000;
+    $success-color: #00ff00;
+
+    $font-family: 'Arial', sans-serif;
+    $font-size-base: 16px;
+    $font-size-large: 1.5em;
+
+    $spacing-small: 10px;
+    $spacing-medium: 20px;
+    $spacing-large: 30px;
+
+    $border-radius: 5px;
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: $spacing-large;
+        font-family: $font-family;
+    }
+
+    main {
+        background-color: $background-color;
+        padding: $spacing-large;
+        border-radius: $border-radius;
+    }
+
+    h1 {
+        color: $primary-color;
+        font-size: $font-size-large;
+        margin-bottom: $spacing-large;
+    }
+
+    .loading, .error, .no-data {
+        text-align: center;
+        font-size: $font-size-base;
+        margin: $spacing-medium 0;
+    }
+
+    .error {
+        color: $error-color;
+    }
+
+    .edit-form {
+        .form-group {
+            margin-bottom: $spacing-medium;
+
+            label {
+                display: block;
+                margin-bottom: $spacing-small;
+                font-weight: bold;
+            }
+
+            input, textarea {
+                width: 100%;
+                padding: $spacing-small;
+                font-size: $font-size-base;
+                border: 1px solid $secondary-color;
+                border-radius: $border-radius;
+            }
+
+            textarea {
+                height: 100px;
+            }
+        }
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: $spacing-large;
+
+        .btn {
+            padding: $spacing-small $spacing-medium;
+            font-size: $font-size-base;
+            border: none;
+            border-radius: $border-radius;
+            cursor: pointer;
+            text-decoration: none;
+            color: #fff;
+
+            &.btn-primary {
+                background-color: $primary-color;
+            }
+
+            &.btn-secondary {
+                background-color: $secondary-color;
+            }
+        }
+    }
+
+    .success-message {
+        color: $success-color;
+        text-align: center;
+        font-size: $font-size-base;
+        margin-top: $spacing-medium;
+    }
 </style>

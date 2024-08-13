@@ -15,22 +15,14 @@ Pokodex is a full-stack application that allows users to search for and view det
    cd pokodex
    ```
 
-2. Set up environment variables:
-   ```
-   cp laravel-backend-service/.env.example laravel-backend-service/.env
-   ```
-   Edit `laravel-backend-service/.env` and configure your database settings.
-
-3. Build and start the Docker containers:
+2. Build and start the Docker containers:
    ```
    docker-compose up --build -d
-   ```
 
-4. Install dependencies:
    ```
-   docker-compose exec laravel-backend composer install
-   docker-compose exec svelte-frontend npm install
-   docker-compose exec python-ai-service pip install -r requirements.txt
+3. Connect to database
+   ```
+      docker-compose exec db psql -U pokodex_user -d pokedex_ai
    ```
 
 5. Run migrations and seed the database:
@@ -43,6 +35,11 @@ Pokodex is a full-stack application that allows users to search for and view det
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:8000/api
    - Python service: http://localhost:8001
+
+7. Larvel clear cache
+
+   docker-compose exec laravel-backend php artisan config:clear
+   docker-compose exec laravel-backend php artisan cache:clear
 
 ## Detailed Setup
 
