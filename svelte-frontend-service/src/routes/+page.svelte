@@ -1,22 +1,32 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
   import type { Pokemon } from '$lib/types';
   
   let pokemonList: Pokemon[] = [];
   let searchQuery = '';
   let currentPage = 1;
-  const itemsPerPage = 10;
+  const itemsPerPage = 20;
 
   onMount(async () => {
-    //TODO: Fetch data from API
-    pokemonList = [
-      { id: 1, name: 'Bulbasaur', type: 'Grass', evolves_from: null, evolves_to: 'Ivysaur', notes: '' },
-      { id: 2, name: 'Ivysaur', type: 'Grass', evolves_from: 'Bulbasaur', evolves_to: 'Venusaur', notes: ''  },
-      { id: 3, name: 'Venusaur', type: 'Grass', evolves_from: 'Ivysaur', evolves_to: null, notes: ''  },
-      { id: 4, name: 'Charmander', type: 'Fire', evolves_from: null, evolves_to: 'Charmeleon', notes: ''  },
-      { id: 5, name: 'Charmeleon', type: 'Fire', evolves_from: 'Charmander', evolves_to: 'Charizard', notes: ''  },
-      { id: 6, name: 'Charizard', type: 'Fire', evolves_from: 'Charmeleon', evolves_to: null, notes: ''  },
-    ];
+    try {
+      const response = await fetch('http://localhost:8000/api/pokemon/');
+      const result = await response.json();
+      if (result.status === 'success') {
+        pokemonList = result.data.map((pokemon: any) => ({
+          id: pokemon.id,
+          name: pokemon.name,
+          type: pokemon.type,
+          evolves_from: pokemon.evolves_from,
+          evolves_to: pokemon.evolves_to,
+          notes: pokemon.notes
+        }));
+      } else {
+        console.error('Failed to fetch Pokemon data');
+      }
+    } catch (error) {
+      console.error('Error fetching Pokemon data:', error);
+    }
   });
 
   $: filteredPokemon = pokemonList.filter(pokemon => 
@@ -35,10 +45,15 @@
   function goToPage(page: number) {
     currentPage = page;
   }
+
+  function goToPokemonDetails(id: number) {
+    goto(`/pokemon/${id}`);
+  }
 </script>
 
 <main>
   <h1>Welcome to Pokedex</h1>
+  <p class="description">This is a Pokedex application built with Svelte, Laravel and Python AI</p>
   
   <img src="/images/pokemon-logo.png" alt="Pokemon Logo" class="pokemon-logo">
   
@@ -53,12 +68,12 @@
 
   <div class="pokemon-grid">
     {#each paginatedPokemon as pokemon (pokemon.id)}
-      <div class="pokemon-card">
+      <button class="pokemon-card" on:click={() => goToPokemonDetails(pokemon.id)}>
         <div class="pokemon-image">
           <div class="image-placeholder">{pokemon.name[0]}</div>
         </div>
         <p>{pokemon.name}</p>
-      </div>
+      </button>
     {/each}
   </div>
 
@@ -70,3 +85,9 @@
     {/each}
   </div>
 </main>
+
+<style>
+  .pokemon-card {
+    cursor: pointer;
+  }
+</style>
